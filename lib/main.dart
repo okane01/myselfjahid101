@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart'; 
-import './provider/receiver_list.dart';
+import './providers/receiver_list.dart';
 
 import './screens/user_editing_screen.dart';
 import './screens/loan_receiver_list_screen.dart';

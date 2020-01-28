@@ -2,28 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/loan_receiver_list.dart';
-import '../provider/receiver_list.dart';
+import '../providers/receiver_list.dart';
 
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final prodData = Provider.of<LoanReceiver>(
-      context,
-      listen: false,
-    );
-    final products = prodData.items;
     return Column(
       children: <Widget>[
         Expanded(
           child: Container(
             height: 320,
-            child: ListView.builder(
-              itemCount: products.length,
-              itemBuilder: (ctx, i) => LoanReceiverWidget(
-                products[i].id,
-                products[i].name,
-                products[i].address,
-               // products[i].imageUrl,
+            child: Consumer<LoanReceiver>(
+              child: Text('No Data Found, Try adding some'),
+              builder: (ctx, loanSnapShot, ch) => ListView.builder(
+                itemCount: loanSnapShot.items.length,
+                itemBuilder: (ctx, i) => LoanReceiverWidget(
+                  loanSnapShot.items[i].id,
+                  loanSnapShot.items[i].name,
+                  loanSnapShot.items[i].address,
+                  loanSnapShot.items[i].imageUrl,
+                ),
               ),
             ),
           ),
@@ -49,7 +47,10 @@ class ProductItem extends StatelessWidget {
             trailing: Container(
               child: FlatButton(
                 child: Text(
-                  '${products.length}',
+                  '${Provider.of<LoanReceiver>(
+                    context,
+                    listen: false,
+                  ).items.length}',
                   style: TextStyle(fontSize: 28, color: Colors.white),
                 ),
                 color: Colors.grey[800],

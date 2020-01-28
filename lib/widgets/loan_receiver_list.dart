@@ -1,24 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:microcredit/widgets/bottomshet.dart';
+
+import '../widgets/bottomshet.dart';
 import '../widgets/buttontapped.dart';
 
 class LoanReceiverWidget extends StatelessWidget {
+
+  final String id;
+  final String name;
+  final String address;
+  final File imageUrl;
+
   LoanReceiverWidget(
     this.id,
     this.name,
     this.address,
-    // this.imageUrl,
+    this.imageUrl,
   );
-
-  final String address;
-  final String id;
-  //final File imageUrl;
-  final String name;
-
   @override
   Widget build(BuildContext context) {
-    return Card(
-      //margin: EdgeInsets.all(0),
+    return Card( 
       child: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
@@ -27,7 +29,7 @@ class LoanReceiverWidget extends StatelessWidget {
         ])),
         child: ListTile(
           leading: CircleAvatar(
-              // backgroundImage: FileImage(imageUrl),
+               backgroundImage: FileImage(imageUrl),
               ),
           title: Text(name),
           subtitle: Text(

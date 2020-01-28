@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:microcredit/model/person_model.dart';
-import 'package:microcredit/provider/receiver_list.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/receiver_list.dart';
+import '../widgets/image_input.dart';
 import '../widgets/button.dart';
 
 class UserEditingScreen extends StatefulWidget {
@@ -14,31 +14,23 @@ class UserEditingScreen extends StatefulWidget {
 }
 
 class _UserEditingScreenState extends State<UserEditingScreen> {
+  final _nameController = TextEditingController();
+  final _addressController = TextEditingController();
   final _form = GlobalKey<FormState>();
-  File _storedImage;  
-  var _editedPerson = Person(
-    id: null,
-    name: '',
-    address: '', 
-  );
-  var _initValue = {
-    'name': '',
-    'address': '',
-    'imageUrl': '',
-  };
-  void _saveForm() {
-    _form.currentState.save();
-    Provider.of<LoanReceiver>(context).addProduct(_editedPerson);
+  File pickedImage;
+  void selectImage(File image) {
+    pickedImage = image;
   }
 
-  Future<void> _picImage() async {
-  final File _newImage = await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-      // maxWidth: 2100,
-    );
-    setState(() {
-      _storedImage = _newImage;
-    });
+  void onSavedData() {
+    if (_nameController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        pickedImage == null) {
+      return;
+    }
+    Provider.of<LoanReceiver>(context, listen: false)
+        .addProduct(_nameController.text, _addressController.text, pickedImage);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -67,69 +59,24 @@ class _UserEditingScreenState extends State<UserEditingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Expanded(
-                     // width: 140,
+                      // width: 140,
                       child: TextFormField(
-                        initialValue: _initValue['name'],
+                        controller: _nameController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(labelText: 'নাম'),
-                        onSaved: (value) {
-                          _editedPerson = Person(
-                            name: value,
-                            address: _editedPerson.address,
-                            //imageUrl: _editedPerson.imageUrl,
-                            id: null,
-                          );
-                        },
                       ),
                     ),
                     SizedBox(
                       width: 10,
                     ),
-                    Stack( 
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Container(
-                            width: 90,
-                            height: 90,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                border: Border.all(
-                                  color: Theme.of(context).primaryColor,
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: _storedImage == null
-                                ? Icon(
-                                    Icons.folder_open,
-                                    color: Theme.of(context).primaryColor,
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      10,
-                                    ),
-                                    child: Image.file(
-                                      _storedImage,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.folder_open,
-                          ),
-                          onPressed: _picImage,
-                        ),
-                      ],
-                    ),
+                    CameraWidget(selectImage),
                   ],
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 TextFormField(
-                  initialValue: _initValue['address'],
+                  controller: _addressController,
                   keyboardType: TextInputType.multiline,
                   minLines: 3,
                   maxLines: 10,
@@ -137,14 +84,6 @@ class _UserEditingScreenState extends State<UserEditingScreen> {
                   decoration: InputDecoration(
                     labelText: 'ঠিকানা',
                   ),
-                  onSaved: (value) {
-                    _editedPerson = Person(
-                      name: _editedPerson.name,
-                      address: value,
-                     // imageUrl: _editedPerson.imageUrl,
-                      id: null,
-                    );
-                  },
                 ),
                 SizedBox(
                   height: 10,
@@ -212,7 +151,7 @@ class _UserEditingScreenState extends State<UserEditingScreen> {
                 MyButton(
                   Icon(Icons.save),
                   24,
-                  _saveForm,
+                  onSavedData,
                 ),
               ],
             ),
