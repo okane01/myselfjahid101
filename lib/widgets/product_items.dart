@@ -13,7 +13,7 @@ class ProductItem extends StatelessWidget {
           child: Container(
             height: 320,
             child: Consumer<LoanReceiver>(
-              child: Text('No Data Found, Try adding some'),
+              child: Center(child: Image.asset('assets/images/errorMessage.png', fit:BoxFit.cover,),),
               builder: (ctx, loanSnapShot, ch) => ListView.builder(
                 itemCount: loanSnapShot.items.length,
                 itemBuilder: (ctx, i) => LoanReceiverWidget(

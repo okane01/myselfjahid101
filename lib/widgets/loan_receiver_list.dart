@@ -6,7 +6,6 @@ import '../widgets/bottomshet.dart';
 import '../widgets/buttontapped.dart';
 
 class LoanReceiverWidget extends StatelessWidget {
-
   final String id;
   final String name;
   final String address;
@@ -20,17 +19,18 @@ class LoanReceiverWidget extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    return Card( 
+    return Card(
       child: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color.fromRGBO(238, 227, 231, 0.9),
-          Color.fromRGBO(72, 177, 191, 0.3),
-        ])),
+          gradient: LinearGradient(colors: [
+            Color.fromRGBO(238, 227, 231, 0.9),
+            Color.fromRGBO(72, 177, 191, 0.3),
+          ]),
+        ),
         child: ListTile(
           leading: CircleAvatar(
-               backgroundImage: FileImage(imageUrl),
-              ),
+            backgroundImage: FileImage(imageUrl),
+          ),
           title: Text(name),
           subtitle: Text(
             address,
